@@ -67,7 +67,7 @@ if args.arg == 'config':
         print('graph_title Netgear connected devices count')
         print('graph_args --lower-limit 0')
         print('graph_vlabel #')
-        print('amount.label Connected devices amount')
+        print('amount.label Connected devices count')
         print('amount.draw LINE')
         print('amount.min 0')
     else:
@@ -81,7 +81,7 @@ if args.arg == 'config':
         for device in get_connected_devices():
             device_name = get_device_name(device)
             slug = slugify(device_name)
-            print('{}.label {} {}'.format(slug, device.name, 'signal strength' if mode == mode_signal_strength else 'link rate'))
+            print('{}.label {} {}'.format(slug, device_name, 'signal strength' if mode == mode_signal_strength else 'link rate'))
             print('{}.draw LINE'.format(slug))
 
     sys.exit(0)
