@@ -14,7 +14,7 @@ host = pynetgear.DEFAULT_HOST  # If you are connected to the network of the Netg
 user = pynetgear.DEFAULT_USER  # The username defaults to admin.
 port = pynetgear.DEFAULT_PORT  # The port defaults to 5000
 
-forced_mode = 'netgear-devices-link-rate'
+forced_mode = None
 
 # Munin config mode
 parser = argparse.ArgumentParser()
