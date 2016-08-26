@@ -14,15 +14,14 @@ host = pynetgear.DEFAULT_HOST  # If you are connected to the network of the Netg
 user = pynetgear.DEFAULT_USER  # The username defaults to admin.
 port = pynetgear.DEFAULT_PORT  # The port defaults to 5000
 
-forced_mode = None
-
 # Munin config mode
 parser = argparse.ArgumentParser()
 parser.add_argument('arg', nargs='?')
+parser.add_argument('--mode', default=__file__.split('/')[-1])  # Mode, determined by symlink name
 args = parser.parse_args()
 
 # Mode, determined by symlink name
-mode = __file__.split('/')[-1]
+mode = args.mode
 mode_count = 'netgear-devices'
 mode_signal_strength = 'netgear-devices-signal-strength'
 mode_link_rate = 'netgear-devices-link-rate'
@@ -31,9 +30,6 @@ modes = [
     mode_signal_strength,
     mode_link_rate
 ]
-
-if forced_mode is not None:
-    mode = forced_mode
 
 
 def get_connected_devices():
