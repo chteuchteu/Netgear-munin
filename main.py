@@ -32,7 +32,7 @@ modes = [
 ]
 
 
-def get_connected_devices():
+def get_connected_devices(mode):
     netgear = pynetgear.Netgear(password, host, user, port)
     if not netgear.logged_in:
         # Log in
@@ -40,11 +40,18 @@ def get_connected_devices():
             print('Could not login to router. Please check host, user, password and port')
             sys.exit(1)
 
-    return netgear.get_attached_devices()
+    devices = netgear.get_attached_devices()
+
+    if mode == mode_signal_strength:
+        # Exclude wired devices
+        devices = [d for d in devices if d.type == 'wireless']
+
+    return devices
 
 
 def get_device_name(device):
-    return device.name if device.name != '--' else device.mac
+    device_name = device.name if device.name != '--' else device.mac
+    return device_name.strip()
 
 
 def slugify(text):
@@ -74,7 +81,7 @@ if args.arg == 'config':
             print('graph_title Netgear connected devices link rate')
             print('graph_vlabel rate')
 
-        for device in get_connected_devices():
+        for device in get_connected_devices(mode):
             device_name = get_device_name(device)
             slug = slugify(device_name)
             print('{}.label {} {}'.format(slug, device_name, 'signal strength' if mode == mode_signal_strength else 'link rate'))
@@ -83,7 +90,8 @@ if args.arg == 'config':
     sys.exit(0)
 
 # Let's go
-devices = get_connected_devices()
+devices = get_connected_devices(mode)
+print(devices)
 
 if mode == mode_count:
     print('amount.value {}'.format(len(devices)))
