@@ -89,6 +89,7 @@ if args.arg == 'config':
             slug = slugify(device_name)
             print('{}.label {}'.format(slug, device_name))
             print('{}.draw LINE'.format(slug))
+            print('{}.info IP: {}, name: {}, mac: {}'.format(slug, device.ip, device.name.strip(), device.mac))
 
     sys.exit(0)
 
