@@ -20,7 +20,7 @@ parser.add_argument('arg', nargs='?')
 parser.add_argument('--mode', default=__file__.split('/')[-1])  # Mode, determined by symlink name
 args = parser.parse_args()
 
-# Mode, determined by symlink name
+# Mode
 mode = args.mode
 mode_count = 'netgear-devices'
 mode_signal_strength = 'netgear-devices-signal-strength'
@@ -54,11 +54,11 @@ def get_device_name(device):
     return device_name.strip()
 
 
+# From https://github.com/yhat/rodeo/issues/90#issuecomment-98790197
 def slugify(text):
     return re.sub(r'[-\s]+', '-', (re.sub(r'[^\w\s-]', '', text).strip().lower()))
 
 
-# From https://github.com/yhat/rodeo/issues/90#issuecomment-98790197
 if mode not in modes:
     print('Unknown mode {}'.format(mode))
     sys.exit(1)
@@ -70,12 +70,15 @@ if args.arg == 'config':
         print('graph_title Netgear connected devices count')
         print('graph_args --lower-limit 0')
         print('graph_vlabel #')
-        print('amount.label Connected devices count')
-        print('amount.draw LINE')
-        print('amount.min 0')
+        print('wired.label Wired devices')
+        print('wired.draw AREA')
+        print('wired.min 0')
+        print('wireless.label Wireless devices')
+        print('wireless.draw STACK')
+        print('wireless.min 0')
     else:
         if mode == mode_signal_strength:
-            print('graph_title Netgear connected devices signal strength')
+            print('graph_title Netgear wireless connected devices signal strength')
             print('graph_vlabel signal')
         elif mode == mode_link_rate:
             print('graph_title Netgear connected devices link rate')
@@ -84,17 +87,17 @@ if args.arg == 'config':
         for device in get_connected_devices(mode):
             device_name = get_device_name(device)
             slug = slugify(device_name)
-            print('{}.label {} {}'.format(slug, device_name, 'signal strength' if mode == mode_signal_strength else 'link rate'))
+            print('{}.label {}'.format(slug, device_name))
             print('{}.draw LINE'.format(slug))
 
     sys.exit(0)
 
 # Let's go
 devices = get_connected_devices(mode)
-print(devices)
 
 if mode == mode_count:
-    print('amount.value {}'.format(len(devices)))
+    print('wired.value {}'.format(len([d for d in devices if d.type == 'wired'])))
+    print('wireless.value {}'.format(len([d for d in devices if d.type == 'wireless'])))
 else:
     for device in devices:
         data = device.signal if mode == mode_signal_strength else device.link_rate
