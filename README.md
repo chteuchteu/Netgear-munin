@@ -2,6 +2,11 @@
 *Netgear wireless routers munin plugin*
 
 ## Usage
+This plugin relies on [pynetgear](https://github.com/balloob/pynetgear):
+
+```bash
+pip3 install pynetgear
+```
 
 1. Clone this project on your server:
     
@@ -22,6 +27,6 @@
 
 3. Test it
 
-    ```
+    ```bash
     munin-run netgear-devices
     ```
